@@ -1,0 +1,75 @@
+body {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.tabs {
+    display: inline-block;
+    margin: 5px;
+    border: 1px solid black;
+    padding: 5px;
+    transition-duration: 0.3s;
+    cursor: move;
+}
+.tabs:hover {
+    border: 1px dashed black;
+}
+.active {
+    background: black;
+    color: white;
+}
+#tabsMenu {
+    display: inline-block;
+}
+
+.tabButtons:hover {
+    cursor: pointer;
+    color: red;
+    transition-duration: 0.3s;
+}
+
+#newTabButton {
+    display: inline-block;
+    margin: 5px;
+    border: 1px solid black;
+    padding: 3px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+#newTabButton:hover {
+    border: 1px solid black;
+    background-color: black;
+    color: white;
+}
+
+.rowDeleteButton {
+    cursor: pointer;
+    margin-left: 5px;
+    transition-duration: 0.3s;
+}
+.rowDeleteButton:hover {
+    color: red;
+}
+.ContentButtons {
+    margin: 5px;
+    border: 1px solid black;
+    background-color: white;
+    padding: 5px;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+.ContentButtons:hover {
+    background: black;
+    color: white;
+}
+
+.w-50 {
+    width: 50px;
+}
+
+.dragSpan {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    margin-right: 10px;
+}
