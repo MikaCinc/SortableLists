@@ -10,7 +10,6 @@ body {
     border: 1px solid black;
     padding: 5px;
     transition-duration: 0.3s;
-    cursor: move;
 }
 .tabs:hover {
     border: 1px dashed black;
@@ -23,6 +22,19 @@ body {
     display: inline-block;
 }
 
+.dragTabTrigger {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    margin-right: 10px;
+}
+
+.tabTitle {
+    cursor: pointer;
+}
+
+.tabButtons {
+    margin-left: 5px;
+}
 .tabButtons:hover {
     cursor: pointer;
     color: red;

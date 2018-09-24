@@ -18,8 +18,7 @@ var Tabs = [
                 Title: "Crvena",
                 Price: 7
             },
-        ],
-        renderOrder: [0, 1, 2]
+        ]
     },
     {
         ID: 1,
@@ -35,12 +34,9 @@ var Tabs = [
                 Title: "Kuvani",
                 Price: 10
             },
-        ],
-        renderOrder: [0, 1]
+        ]
     },
 ];
-
-var tabsRenderOrder = [0, 1];
 
 var Current = 0;
 
@@ -57,23 +53,30 @@ const initSortable = () => {
 const sortTabs = () => {
     var el = document.getElementById('tabsMenu');
 
-    var currentTab = findByID(Current, Tabs);
     var options = {
+        handle: ".dragTabTrigger",
         animation: 100,
         store: {
             get: function () {
-                // Here it will sort the list based on renderOrder array; Object oredr in Content array wont have any effect on this:
-                return tabsRenderOrder;
+                var elems = document.getElementsByClassName("tabs");
+                var order = [];
+
+                for (let i = 0; i < elems.length; i++) {
+                    order.push(parseInt(elems[i].getAttribute("data-id"), 10));
+                }
+
+                return order;
             },
 
             set: function () {
-                tabsRenderOrder = [];
+                var order = [...sortable.toArray()];
+                var tabs = [...Tabs];
 
-                var elems = document.getElementsByClassName("tabs");
-
-                for (let i = 0; i < elems.length; i++) {
-                    tabsRenderOrder.push(parseInt(elems[i].getAttribute("data-id"), 10));
+                for (let i = 0; i < tabs.length; i++) {
+                    Tabs[i] = findByID(parseInt(order[i], 10), tabs)
                 }
+
+                render();
             }
         }
     }
@@ -82,29 +85,34 @@ const sortTabs = () => {
 
 const sortRows = () => {
     var el = document.getElementById('draggableTarget');
-
+    
     var currentTab = findByID(Current, Tabs);
     var options = {
         handle: '.dragSpan',
         animation: 100,
         store: {
             get: function () {
-                // Here it will sort the list based on renderOrder array; Object oredr in Content array wont have any effect on this:
-                return currentTab.renderOrder;
-            },
-
-            set: function () {
-                currentTab.renderOrder = [];
-
                 var elems = document.getElementsByClassName("draggableRow");
+                var order = [];
 
                 for (let i = 0; i < elems.length; i++) {
-                    currentTab.renderOrder.push(parseInt(elems[i].getAttribute("data-id"), 10));
+                    order.push(parseInt(elems[i].getAttribute("data-id"), 10));
+                }
+
+                return order;
+            },
+
+            set: function (sortable) {
+                var order = [...sortable.toArray()];
+                var content = [...currentTab.Content];
+
+                for (let i = 0; i < content.length; i++) {
+                    currentTab.Content[i] = findByID(parseInt(order[i], 10), content)
                 }
             }
         }
     }
-    var sortable = Sortable.create(el, options);
+    Sortable.create(el, options);
 }
 
 const render = () => {
@@ -123,8 +131,24 @@ const render = () => {
         // TABS
         var tab = document.createElement("div");
         tab.className = Tabs[i].ID === Current ? "tabs active" : "tabs";
-        tab.innerHTML = Tabs[i].Title + " ";
         tab.setAttribute("data-id", Tabs[i].ID);
+
+        // DRAG icon
+        var dragSpan = document.createElement("span");
+        var dragIcon = document.createTextNode("☰");
+        dragSpan.appendChild(dragIcon);
+        dragSpan.className = "dragTabTrigger";
+        tab.appendChild(dragSpan);
+
+        // TITLE SPAN
+        var titleSpan = document.createElement("span");
+        titleSpan.innerHTML = Tabs[i].Title;
+        titleSpan.className = "tabTitle";
+        titleSpan.onclick = () => {
+            Current = Tabs[i].ID;
+            render();
+        }
+        tab.appendChild(titleSpan);
 
         // PEN icon
         var penSpan = document.createElement("span");
@@ -147,10 +171,10 @@ const render = () => {
         tab.appendChild(xSpan);
 
         // TAB ONCLICK EVENT
-        tab.onclick = () => {
+        /* tab.onclick = () => {
             Current = Tabs[i].ID;
             render();
-        }
+        } */
 
         // Append to the tabs div
         tabs.appendChild(tab);
@@ -264,11 +288,8 @@ const addTab = () => {
     var newTab = {
         ID: Math.floor(Math.random() * 1000),
         Title: prompt("Enter tab title:"),
-        Content: [],
-        renderOrder: []
+        Content: []
     };
-
-    tabsRenderOrder.push(newTab.ID);
 
     if (!newTab.Title || !newTab.Title.length) return;
 
@@ -307,8 +328,6 @@ const addRow = (TabID) => {
     };
 
     var tab = findByID(TabID, Tabs);
-
-    tab.renderOrder.push(newRow.ID);
 
     tab.Content.push(newRow);
 
